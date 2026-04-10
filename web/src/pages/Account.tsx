@@ -366,7 +366,7 @@ export default function Account() {
                       <div style={{ fontSize:12, color:'#16a34a' }}>Telegram ID: {telegramId}</div>
                     </div>
                   </div>
-                  <a href={`https://t.me/${import.meta.env.VITE_BOT_USERNAME || '@finanancemanagerdata_bot'}`} target="_blank" rel="noopener noreferrer"
+                  <a href={`https://t.me/${import.meta.env.VITE_BOT_USERNAME || 'finanancemanagerdata_bot'}`} target="_blank" rel="noopener noreferrer"
                     style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'10px 16px', background:'#4f6ef7', color:'#fff', borderRadius:10, fontSize:13, fontWeight:600, textDecoration:'none', marginBottom:10 }}>
                     <Bot size={14} /> Botni ochish
                   </a>
@@ -380,7 +380,7 @@ export default function Account() {
                 <div>
                   <div style={{ marginBottom:16 }}>
                     {[
-                      `@${import.meta.env.VITE_BOT_USERNAME || '@finanancemanagerdata_bot'} botini Telegramda oching`,
+                      `@${import.meta.env.VITE_BOT_USERNAME || 'finanancemanagerdata_bot'} botini Telegramda oching`,
                       '/start yuboring',
                       'Quyida token yarating',
                       '/link <token> shaklida yuboring',
