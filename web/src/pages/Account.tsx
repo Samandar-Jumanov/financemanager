@@ -29,6 +29,53 @@ function saveNotifPrefs(prefs: typeof NOTIFICATION_DEFAULTS) {
   localStorage.setItem('notif_prefs', JSON.stringify(prefs));
 }
 
+
+function Field({ label, value, onChange, type = 'text', disabled = false }: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  disabled?: boolean;
+}) {
+  const [focused, setFocused] = useState(false);
+  return (
+    <div>
+      <label style={{
+        display: 'block',
+        fontSize: 11,
+        fontWeight: 600,
+        color: '#6b7280',
+        marginBottom: 6,
+        letterSpacing: '0.06em',
+        textTransform: 'uppercase',
+      }}>
+        {label}
+      </label>
+      <input
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        disabled={disabled}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        style={{
+          width: '100%',
+          boxSizing: 'border-box',
+          padding: '11px 14px',
+          borderRadius: 10,
+          border: `1.5px solid ${focused && !disabled ? '#4f6ef7' : '#e2e8f0'}`,
+          fontSize: 14,
+          color: disabled ? '#94a3b8' : '#0f172a',
+          background: disabled ? '#f8fafc' : 'white',
+          outline: 'none',
+          boxShadow: focused && !disabled ? '0 0 0 3px rgba(79,110,247,0.12)' : 'none',
+          transition: 'border-color 0.15s, box-shadow 0.15s',
+        }}
+      />
+    </div>
+  );
+}
+
 export default function Account() {
   const { user, isDemo, logout, refreshUser } = useAuth();
   const toast = useToast();
@@ -57,7 +104,6 @@ export default function Account() {
       return next;
     });
   };
-
 
   // Telegram linking
   const [linkToken, setLinkToken]     = useState('');
@@ -154,16 +200,6 @@ export default function Account() {
     { id:'notifications', label:'Bildirishnoma', Icon:Bell },
   ] as const;
 
-  const Field = ({ label, value, onChange, type='text', disabled=false }: any) => (
-    <div>
-      <label style={{ display:'block', fontSize:11, fontWeight:600, color:'#6b7280', marginBottom:6, letterSpacing:'0.06em', textTransform:'uppercase' }}>{label}</label>
-      <input type={type} value={value} onChange={e=>onChange(e.target.value)} disabled={disabled}
-        style={{ width:'100%', boxSizing:'border-box', padding:'11px 14px', borderRadius:10, border:'1.5px solid #e2e8f0', fontSize:14, color:disabled?'#94a3b8':'#0f172a', background:disabled?'#f8fafc':'white', outline:'none' }}
-        onFocus={e=>{ if(!disabled) e.target.style.borderColor='#4f6ef7'; }}
-        onBlur={e=>{ e.target.style.borderColor='#e2e8f0'; }} />
-    </div>
-  );
-
   const notifItems = [
     { key:'budget_warning'    as const, title:'Byudjet ogohlantirishlari',   desc:'Kategoriya limiti 80% ga yetganda' },
     { key:'bot_transactions'  as const, title:'Telegram bot xabarlari',       desc:'Bot tranzaksiyalarni saqlganda'     },
@@ -253,8 +289,8 @@ export default function Account() {
               <h3 style={{ fontSize:16, fontWeight:700, color:'#0f172a', margin:'0 0 6px' }}>Parolni o'zgartirish</h3>
               <p style={{ fontSize:13, color:'#64748b', margin:'0 0 24px' }}>Xavfsizlik uchun kuchli parol ishlating</p>
               <div style={{ display:'flex', flexDirection:'column', gap:16, maxWidth:400 }}>
-                <Field label="Joriy parol"          type="password" value={passForm.old}     onChange={(v:string)=>setPassForm(f=>({...f,old:v}))}     disabled={isDemo} />
-                <Field label="Yangi parol"          type="password" value={passForm.next}    onChange={(v:string)=>setPassForm(f=>({...f,next:v}))}    disabled={isDemo} />
+                <Field label="Joriy parol"              type="password" value={passForm.old}     onChange={(v:string)=>setPassForm(f=>({...f,old:v}))}     disabled={isDemo} />
+                <Field label="Yangi parol"              type="password" value={passForm.next}    onChange={(v:string)=>setPassForm(f=>({...f,next:v}))}    disabled={isDemo} />
                 <Field label="Yangi parolni tasdiqlang" type="password" value={passForm.confirm} onChange={(v:string)=>setPassForm(f=>({...f,confirm:v}))} disabled={isDemo} />
                 {passError && <div style={{ background:'#fef2f2', border:'1px solid #fecaca', borderRadius:8, padding:'10px 14px', color:'#dc2626', fontSize:13 }}>⚠️ {passError}</div>}
                 {passMsg   && <div style={{ background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:8, padding:'10px 14px', color:'#16a34a',  fontSize:13 }}>{passMsg}</div>}
@@ -316,7 +352,6 @@ export default function Account() {
             </div>
           )}
 
-
           {tab === 'telegram' && (
             <div>
               <h3 style={{ fontSize:15, fontWeight:700, color:'#0f172a', marginBottom:6 }}>Telegram Bot ulanish</h3>
@@ -331,7 +366,7 @@ export default function Account() {
                       <div style={{ fontSize:12, color:'#16a34a' }}>Telegram ID: {telegramId}</div>
                     </div>
                   </div>
-                  <a href={`https://t.me/${import.meta.env.VITE_BOT_USERNAME || 'your_financebot'}`} target="_blank" rel="noopener noreferrer"
+                  <a href={`https://t.me/${import.meta.env.VITE_BOT_USERNAME || '@finanancemanagerdata_bot'}`} target="_blank" rel="noopener noreferrer"
                     style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'10px 16px', background:'#4f6ef7', color:'#fff', borderRadius:10, fontSize:13, fontWeight:600, textDecoration:'none', marginBottom:10 }}>
                     <Bot size={14} /> Botni ochish
                   </a>
@@ -345,7 +380,7 @@ export default function Account() {
                 <div>
                   <div style={{ marginBottom:16 }}>
                     {[
-                      `@${import.meta.env.VITE_BOT_USERNAME || 'your_financebot'} botini Telegramda oching`,
+                      `@${import.meta.env.VITE_BOT_USERNAME || '@finanancemanagerdata_bot'} botini Telegramda oching`,
                       '/start yuboring',
                       'Quyida token yarating',
                       '/link <token> shaklida yuboring',
