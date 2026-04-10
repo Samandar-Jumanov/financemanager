@@ -1,0 +1,10 @@
+{
+  "name": "financebot",
+  "private": true,
+  "workspaces": ["api", "bot", "web"],
+  "scripts": {
+    "dev:api": "cd api && npm run start:dev",
+    "dev:bot": "cd bot && npm run dev",
+    "dev:web": "cd web && npm run dev"
+  }
+}
